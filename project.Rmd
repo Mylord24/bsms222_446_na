@@ -113,7 +113,6 @@ args(log)
 ```
 
 
-
 You can change the default values by simply assigning another object:
 
 ```{r}
@@ -205,6 +204,7 @@ solution_2 <- (-b - sqrt(b^2 - 4*a*c)) / (2*a)
 
 For more advice, we highly recommend studying Hadley Wickham’s style guide
 
+
 ###2.2.6 Saving your workspace
 Values remain in the workspace until you end your session or erase them with the function rm. But workspaces also can be saved for later use. In fact, when you quit R, the program asks you if you want to save your workspace. If you do save it, the next time you start R, the program will restore the workspace.
 
@@ -237,7 +237,20 @@ c <- -1
 
 1. What is the sum of the first 100 positive integers? The formula for the sum of integers   throughis and then use R to compute the sum of   through using the formula. What is the sum?
 
+```{r}
+
+n<- 100
+n*(n + 1)/2
+
+```
+
+
 2. Now use the same formula to compute the sum of the integers from 1 through 1,000.
+```{r}
+n< - 1000
+n*(n+1)/2
+```
+
 
 3. Look at the result of typing the following code into R:
 
@@ -252,9 +265,15 @@ Based on the result, what do you think the functions seq and sum do? You can use
 b
 
 4. In math and programming, we say that we evaluate a function when we replace the argument with a given number. So if we type sqrt(4), we evaluate the sqrt function. In R, you can evaluate a function inside another function. The evaluations happen from the inside out. Use one line of code to compute the log, in base 10, of the square root of 100.
+```{r}
+log(sqrt(100), base = 10)
+```
+
 
 5. Which of the following will always return the numeric value stored in x? You can try out examples and use the help system if you want.
 c
+
+
 
 ##2.4 Data types
 Variables in R can be of different types. For example, we need to distinguish numbers from character strings and tables from simple lists of numbers. The function class helps us determine what type of object we have:
@@ -370,6 +389,7 @@ In the murders dataset, we might expect the region to also be a character vector
 class(murders$region)
 ```
 
+
 It is a factor. Factors are useful for storing categorical data. We can see that there are only 4 regions by using the levels function:
 
 ```{r}
@@ -391,6 +411,12 @@ levels(region)
 The new order is in agreement with the fact that the Northeast has the least murders and the South has the most.
 
 Warning: Factors can be a source of confusion since sometimes they behave like characters and sometimes they do not. As a result, confusing factors and characters are a common source of bugs.
+
+```{r}
+seq(1,80, 3)
+  
+```
+
 
 
 ###2.4.6 Lists
@@ -516,8 +542,7 @@ library(dslabs)
 data(murders)
 ```
 
-
-
+Use the function str to examine the structure of the murders object. Which of the following best describes the variables represented in this data frame?
 
 
 ```{r}
@@ -525,18 +550,22 @@ str(murders)
 ```
 a
 
-What are the column names used by the data frame for these five variables?
+2. What are the column names used by the data frame for these five variables?
 
+state, abb, region, population, total
 
 3. Use the accessor $ to extract the state abbreviations and assign them to the object a. What is the class of this object?
 
 
-
 ```{r}
-abbreviate
+a <- murders$abb
+class(a)
 ```
+character
 
 4. Now use the square brackets to extract the state abbreviations and assign them to the object b. Use the identical function to determine if a and b are the same.
+
+
 
 
 5. We saw that the region column stores a factor. You can corroborate this by typing:
@@ -551,6 +580,10 @@ length(murders$region)
 ```
 
 6. The function table takes a vector and returns the frequency of each element. You can quickly see how many states are in each region by applying this function. Use this function in one line of code to create a table of states per region.
+
+```{r}
+
+```
 
 
 ##2.6 Vectors
