@@ -215,13 +215,24 @@ pre code {
 
 
 <!-- rnb-text-begin -->
+<p>#Chapter3 Programming basics</p>
+<p>We teach R because it greatly facilitates data analysis, the main topic of this book. By coding in R, we can efficiently perform exploratory data analysis, build data analysis pipelines, and prepare data visualization to communicate results. However, R is not just a data analysis environment but a programming language. Advanced R programmers can develop complex packages and even improve R itself, but we do not cover advanced programming in this book. Nonetheless, in this section, we introduce three key programming concepts: conditional expressions, for-loops, and functions. These are not just key building blocks for advanced programming, but are sometimes useful during data analysis. We also note that there are several functions that are widely used to program in R but that we will not cover in this book. These include split, cut, do.call, and Reduce, as well as the data.table package. These are worth learning if you plan to become an expert R programmer. ## Conditional expressions Conditional expressions are one of the basic features of programming. They are used for what is called flow control. The most common conditional expression is the if-else statement. In R, we can actually perform quite a bit of data analysis without conditionals. However, they do come up occasionally, and you will need them once you start writing your own functions and packages.</p>
+<p>Here is a very simple example showing the general structure of an if-else statement. The basic idea is to print the reciprocal of a unless a is 0:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYTwtMFxuaWYoYSE9MCl7cHJpbnQoMS9hKX1lbHNle3ByaW50KFwiTm8gcmVjaXByb2NhbCBmb3IgMFwiKX1cbmBgYCJ9 -->
+<pre class="r"><code>a&lt;-0
+if(a!=0){print(1/a)}else{print(&quot;No reciprocal for 0&quot;)}</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiTm8gcmVjaXByb2NhbCBmb3IgMFwiXG4ifQ== -->
+<pre><code>[1] &quot;No reciprocal for 0&quot;</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+<p>Let’s look at one more example using the US murders data frame:</p>
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogImNoYXB0ZXIgMyINCm91dHB1dDogaHRtbF9ub3RlYm9vaw0KLS0tDQoNCg0KYGBge3J9DQoNCmBgYA0KDQo=</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogImNoYXB0ZXIgMyINCm91dHB1dDogaHRtbF9ub3RlYm9vaw0KLS0tDQoNCiNDaGFwdGVyMyAgUHJvZ3JhbW1pbmcgYmFzaWNzDQoNCldlIHRlYWNoIFIgYmVjYXVzZSBpdCBncmVhdGx5IGZhY2lsaXRhdGVzIGRhdGEgYW5hbHlzaXMsIHRoZSBtYWluIHRvcGljIG9mIHRoaXMgYm9vay4gQnkgY29kaW5nIGluIFIsIHdlIGNhbiBlZmZpY2llbnRseSBwZXJmb3JtIGV4cGxvcmF0b3J5IGRhdGEgYW5hbHlzaXMsIGJ1aWxkIGRhdGEgYW5hbHlzaXMgcGlwZWxpbmVzLCBhbmQgcHJlcGFyZSBkYXRhIHZpc3VhbGl6YXRpb24gdG8gY29tbXVuaWNhdGUgcmVzdWx0cy4gSG93ZXZlciwgUiBpcyBub3QganVzdCBhIGRhdGEgYW5hbHlzaXMgZW52aXJvbm1lbnQgYnV0IGEgcHJvZ3JhbW1pbmcgbGFuZ3VhZ2UuIEFkdmFuY2VkIFIgcHJvZ3JhbW1lcnMgY2FuIGRldmVsb3AgY29tcGxleCBwYWNrYWdlcyBhbmQgZXZlbiBpbXByb3ZlIFIgaXRzZWxmLCBidXQgd2UgZG8gbm90IGNvdmVyIGFkdmFuY2VkIHByb2dyYW1taW5nIGluIHRoaXMgYm9vay4gTm9uZXRoZWxlc3MsIGluIHRoaXMgc2VjdGlvbiwgd2UgaW50cm9kdWNlIHRocmVlIGtleSBwcm9ncmFtbWluZyBjb25jZXB0czogY29uZGl0aW9uYWwgZXhwcmVzc2lvbnMsIGZvci1sb29wcywgYW5kIGZ1bmN0aW9ucy4gVGhlc2UgYXJlIG5vdCBqdXN0IGtleSBidWlsZGluZyBibG9ja3MgZm9yIGFkdmFuY2VkIHByb2dyYW1taW5nLCBidXQgYXJlIHNvbWV0aW1lcyB1c2VmdWwgZHVyaW5nIGRhdGEgYW5hbHlzaXMuIFdlIGFsc28gbm90ZSB0aGF0IHRoZXJlIGFyZSBzZXZlcmFsIGZ1bmN0aW9ucyB0aGF0IGFyZSB3aWRlbHkgdXNlZCB0byBwcm9ncmFtIGluIFIgYnV0IHRoYXQgd2Ugd2lsbCBub3QgY292ZXIgaW4gdGhpcyBib29rLiBUaGVzZSBpbmNsdWRlIHNwbGl0LCBjdXQsIGRvLmNhbGwsIGFuZCBSZWR1Y2UsIGFzIHdlbGwgYXMgdGhlIGRhdGEudGFibGUgcGFja2FnZS4gVGhlc2UgYXJlIHdvcnRoIGxlYXJuaW5nIGlmIHlvdSBwbGFuIHRvIGJlY29tZSBhbiBleHBlcnQgUiBwcm9ncmFtbWVyLg0KIyMgQ29uZGl0aW9uYWwgZXhwcmVzc2lvbnMNCkNvbmRpdGlvbmFsIGV4cHJlc3Npb25zIGFyZSBvbmUgb2YgdGhlIGJhc2ljIGZlYXR1cmVzIG9mIHByb2dyYW1taW5nLiBUaGV5IGFyZSB1c2VkIGZvciB3aGF0IGlzIGNhbGxlZCBmbG93IGNvbnRyb2wuIFRoZSBtb3N0IGNvbW1vbiBjb25kaXRpb25hbCBleHByZXNzaW9uIGlzIHRoZSBpZi1lbHNlIHN0YXRlbWVudC4gSW4gUiwgd2UgY2FuIGFjdHVhbGx5IHBlcmZvcm0gcXVpdGUgYSBiaXQgb2YgZGF0YSBhbmFseXNpcyB3aXRob3V0IGNvbmRpdGlvbmFscy4gSG93ZXZlciwgdGhleSBkbyBjb21lIHVwIG9jY2FzaW9uYWxseSwgYW5kIHlvdSB3aWxsIG5lZWQgdGhlbSBvbmNlIHlvdSBzdGFydCB3cml0aW5nIHlvdXIgb3duIGZ1bmN0aW9ucyBhbmQgcGFja2FnZXMuDQoNCkhlcmUgaXMgYSB2ZXJ5IHNpbXBsZSBleGFtcGxlIHNob3dpbmcgdGhlIGdlbmVyYWwgc3RydWN0dXJlIG9mIGFuIGlmLWVsc2Ugc3RhdGVtZW50LiBUaGUgYmFzaWMgaWRlYSBpcyB0byBwcmludCB0aGUgcmVjaXByb2NhbCBvZiBhIHVubGVzcyBhIGlzIDA6DQoNCg0KDQoNCg0KYGBge3J9DQphPC0wDQppZihhIT0wKXtwcmludCgxL2EpfWVsc2V7cHJpbnQoIk5vIHJlY2lwcm9jYWwgZm9yIDAiKX0NCg0KYGBgDQpMZXTigJlzIGxvb2sgYXQgb25lIG1vcmUgZXhhbXBsZSB1c2luZyB0aGUgVVMgbXVyZGVycyBkYXRhIGZyYW1lOg0KDQoNCg0KDQoNCg0K</div>
 
 
 
