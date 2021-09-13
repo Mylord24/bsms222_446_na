@@ -107,4 +107,131 @@ The dplyr package from the tidyverse introduces functions that perform some of t
 ###4.3.1 Adding a column with mutate
 We want all the necessary information for our analysis to be included in the data table. So the first task is to add the murder rates to our murders data frame. The function mutate takes the data frame as a first argument and the name and values of the variable as a second argument using the convention name = values. So, to add murder rates, we use:
 
+```{r}
+library(dplyr)
+library(dslabs)
+data("murders")
+murders <- mutate(murders, rate = total / population * 100000)
+murders
+```
+Notice that here we used total and population inside the function, which are objects that are not defined in our workspace. But why don’t we get an error?
+
+This is one of dplyr’s main features. Functions in this package, such as mutate, know to look for variables in the data frame provided in the first argument. In the call to mutate above, total will have the values in murders$total. This approach makes the code much more readable.
+
+We can see that the new column is added:
+```{r}
+head(murders)
+
+```
+
+Although we have overwritten the original murders object, this does not change the object that loaded with data(murders). If we load the murders data again, the original will overwrite our mutated version.
+
+###4.3.2 Subsetting with filter
+Now suppose that we want to filter the data table to only show the entries for which the murder rate is lower than 0.71. To do this we use the filter function, which takes the data table as the first argument and then the conditional statement as the second. Like mutate, we can use the unquoted variable names from murders inside the function and it will know we mean the columns and not objects in the workspace.
+```{r}
+filter(murders, rate <= 0.71)
+```
+4.3.3 Selecting columns with select
+Although our data table only has six columns, some data tables include hundreds. If we want to view just a few, we can use the dplyr select function. In the code below we select three columns, assign this to a new object and then filter the new object:
+```{r}
+new_table <- select(murders, state, region, rate)
+filter(new_table, rate <= 0.71)
+
+```
+4.3.3 Selecting columns with select
+Although our data table only has six columns, some data tables include hundreds. If we want to view just a few, we can use the dplyr select function. In the code below we select three columns, assign this to a new object and then filter the new object:
+```{r}
+new_table <- select(murders, state, region, rate)
+filter(new_table, rate <= 0.71)
+```
+
+In the call to select, the first argument murders is an object, but state, region, and rate are variable names.
+
+
+4.4 Exercises
+1. Load the dplyr package and the murders dataset.
+```{r}
+library(dplyr)
+library(dslabs)
+data(murders)
+```
+You can add columns using the dplyr function mutate. This function is aware of the column names and inside the function you can call them unquoted:
+```{r}
+murders <- mutate(murders, population_in_millions = population / 10^6)
+```
+
+We can write population rather than murders$population. The function mutate knows we are grabbing columns from murders.
+
+Use the function mutate to add a murders column named rate with the per 100,000 murder rate as in the example code above. Make sure you redefine murders as done in the example code above ( murders <- [your code]) so we can keep using this variable.
+```{r}
+mutate(murders, rate =  murders$total/murders$population_in_millions)
+```
+
+
+
+2. If rank(x) gives you the ranks of x from lowest to highest, rank(-x) gives you the ranks from highest to lowest. Use the function mutate to add a column rank containing the rank, from highest to lowest murder rate. Make sure you redefine murders so we can keep using this variable.
+
+```{r}
+data(murders)
+murder_rate <- murders$total/murders$population*100000
+rate <- murder_rate
+
+#*****
+murders<- mutate(murders, rate= murder_rate, rank=rank(-rate))
+murders
+```
+
+
+3. With dplyr, we can use select to show only certain columns. For example, with this code we would only show the states and population sizes:
+```{r}
+select(murders, state, abb)
+```
+
+
+
+
+4. The dplyr function filter is used to choose specific rows of the data frame to keep. Unlike select which is for columns, filter is for rows. For example, you can show just the New York row like this:
+```{r}
+filter(murders, state == "New York")
+```
+
+You can use other logical vectors to filter rows.
+
+Use filter to show the top 5 states with the highest murder rates. After we add murder rate and rank, do not change the murders dataset, just show the result. Remember that you can filter based on the rank column.
+
+```{r}
+
+```
+
+5. We can remove rows using the != operator. For example, to remove Florida, we would do this:
+
+```{r}
+no_florida <- filter(murders, state != "Florida")
+
+no_south <- filter(murders, region != "South")
+no_south
+nrow(no_south)
+```
+
+6. We can also use %in% to filter with dplyr. You can therefore see the data from New York and Texas like this:
+```{r}
+filter(murders, state %in% c("New York", "Texas"))
+murders_nw <- filter(murders, region %in% c('Northeast', 'West'))
+murders_nw
+nrow(murders_nw)
+```
+7. Suppose you want to live in the Northeast or West and want the murder rate to be less than 1. We want to see the data for the states satisfying these options. Note that you can use logical operators with filter. Here is an example in which we filter to keep only small states in the Northeast region.
+```{r}
+filter(murders, population < 5000000 & region == "Northeast")
+murders<-mutate(murders, rate = murder_rate)
+
+my_states <- filter(murders, region %in% c('Northeast', 'West')& rate < 1)
+select(my_states, state, rate, rank)
+
+```
+
+
+Make sure murders has been defined with rate and rank and still has all states. Create a table called my_states that contains rows for states satisfying both the conditions: it is in the Northeast or West and the murder rate is less than 1. Use select to show only the state name, the rate, and the rank.
+
+
 
