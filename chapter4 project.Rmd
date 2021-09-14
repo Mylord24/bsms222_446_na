@@ -148,7 +148,7 @@ filter(new_table, rate <= 0.71)
 In the call to select, the first argument murders is an object, but state, region, and rate are variable names.
 
 
-4.4 Exercises
+##4.4 Exercises
 1. Load the dplyr package and the murders dataset.
 ```{r}
 library(dplyr)
