@@ -751,6 +751,7 @@ murders %>%
 A common operation in data analysis is to determine if a value falls inside an interval. We can check this using conditionals. For example, to check if the elements of a vector x are between a and b we can type
 
 ```{r}
+
 x >= a & x <= b
 ```
 
