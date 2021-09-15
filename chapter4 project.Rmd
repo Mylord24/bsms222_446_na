@@ -1,8 +1,8 @@
 ---
 title: "chapter4"
 output:
-  pdf_document: default
   html_document: null
+  pdf_document: default
 ---
 
 
@@ -703,6 +703,11 @@ This produces the same results as the sapply call shown above.
 A particularly useful purrr function for interacting with the rest of the tidyverse is map_df, which always returns a tibble data frame. However, the function being called needs to return a vector or a list with names. For this reason, the following code would result in a Argument 1 must have names error:
 
 ```{r}
+compute_s_n <- function(n){
+  x <- 1:n
+  tibble(sum = sum(x))
+}
+s_n <- map_df(n, compute_s_n)
 s_n <- map_df(n, compute_s_n)
 ```
 We need to change the function to make this work:
