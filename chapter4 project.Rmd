@@ -1,9 +1,8 @@
 ---
 title: "chapter4"
 output:
-  html_document:
-    df_print: paged
-keep_md: yes
+  pdf_document: default
+  html_document: null
 ---
 
 
