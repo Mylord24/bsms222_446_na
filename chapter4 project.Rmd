@@ -827,8 +827,18 @@ data.frame(n, s_n, s_n_2)
 
 
 
+```{r}
+d 
+```
 
+```{r}
+d$Effect
+table(d$Effect)
+```
 
+```{r}
+d%>% group_by(ASD, Effect)%>% select(ASD,Effect)%>% filter(ASD %in% c("Y", "N"))%>% summarise(ASD , Effect)  %>% count()
+```
 
 
 

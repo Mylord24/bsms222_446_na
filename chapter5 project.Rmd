@@ -134,7 +134,6 @@ read_delim	general text file format, must define delimiter	txt
 Although the suffix usually tells us what type of file it is, there is no guarantee that these always match. We can open the file to take a look or use the function read_lines to look at a few lines:
 ```{r}
 read_lines("murders.csv", n_max = 3)
-file.cop
 ```
 This also shows that there is a header. Now we are ready to read-in the data into R. From the .csv suffix and the peek at the file, we know to use read_csv:
 ```{r}
@@ -214,10 +213,12 @@ extdata/murders.csv"
 The read_csv file can read these files directly:
 ```{r}
 dat <- read_csv(url)
+dat
 ```
 If you want to have a local copy of the file, you can use the download.file function:
 ```{r}
 download.file(url, "murders.csv")
+
 ```
 This will download the file and save it on your system with the name murders.csv. You can use any name here, not necessarily murders.csv. Note that when using download.file you should be careful as it will overwrite existing files without warning.
 
@@ -227,6 +228,7 @@ tmp_filename <- tempfile()
 download.file(url, tmp_filename)
 dat <- read_csv(tmp_filename)
 file.remove(tmp_filename)
+
 ```
 
 ##5.5 R-base importing functions
@@ -241,12 +243,13 @@ An often useful R-base importing function is scan, as it provides much flexibili
 
 With experience you will learn how to deal with different challenges. Carefully reading the help files for the functions discussed here will be useful. With scan you can read-in each cell of a file. Here is an example:
 ```{r}
-
-```
 path <- system.file("extdata", package = "dslabs")
 filename <- "murders.csv"
 x <- scan(file.path(path, filename), sep = ",", what = "c")
 x[1:10]
+```
+
+
 
 Note that the tidyverse provides read_lines, a similarly useful function.
 
@@ -288,9 +291,29 @@ Save the Data as Text Files - Save files for sharing in comma or tab delimited f
 ##5.9 Exercises
 1. Pick a measurement you can take on a regular basis. For example, your daily weight or how long it takes you to run 5 miles. Keep a spreadsheet that includes the date, the hour, the measurement, and any other informative variable you think is worth keeping. Do this for 2 weeks. Then make a plot.
 
+```{r}
+path <- system.file("extdata", package = "dslabs")
+files <- list.files(path)
+files
+x <- c(1:9)
+fullpath <- file.path(path, files[x] )
+file.copy( fullpath, files[x]  , overwrite = T)
+```
 
+```{r}
+url <- 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTHVSozssMwor7QJzAGCM_GWF7veZYmb1eSU3pwzNaj7FDEU83s1aLuxN48aOL_Hgr5IuOe8Nce3F60/pubhtml'
+read.csv(url)
+download.file(url, "weight.exel")
+getwd
+list.files(path = getwd())
+read.csv("weight.txt" )
+```
 
+```{r}
+path
+```
 
+```
 
 
 
