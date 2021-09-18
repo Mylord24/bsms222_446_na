@@ -24,8 +24,12 @@ A spreadsheet containing the US murders data is included as part of the dslabs p
 ```{r}
 filename <- "murders.csv"
 dir <- system.file("extdata", package = "dslabs") 
+dir
 fullpath <- file.path(dir, filename)
+fullpath
+
 file.copy(fullpath, "murders.csv")
+
 ```
 This code does not read the data into R, it just copies a file. But once the file is copied, we can import the data with a simple line of code. Here we use the read_csv function from the readr package, which is part of the tidyverse.
 
@@ -96,7 +100,7 @@ The final line of code we used to copy the file into our home directory used
 the function file.copy. This function takes two arguments: the file to copy and the name to give it in the new directory.
 
 ```{r}
-file.copy(fullpath, "murders.csv")
+file.copy("murders.csv",fullpath)
 ```
 If a file is copied successfully, the file.copy function returns TRUE. Note that we are giving the file the same name, murders.csv, but we could have named it anything. Also note that by not starting the string with a slash, R assumes this is a relative path and copies the file to the working directory.
 
@@ -213,7 +217,7 @@ dat
 ```
 If you want to have a local copy of the file, you can use the download.file function:
 ```{r}
-download.file(url, 'murders.xl')
+download.file(url, "murders.csv")
 
 ```
 This will download the file and save it on your system with the name murders.csv. You can use any name here, not necessarily murders.csv. Note that when using download.file you should be careful as it will overwrite existing files without warning.
@@ -286,19 +290,37 @@ Save the Data as Text Files - Save files for sharing in comma or tab delimited f
 
 ##5.9 Exercises
 1. Pick a measurement you can take on a regular basis. For example, your daily weight or how long it takes you to run 5 miles. Keep a spreadsheet that includes the date, the hour, the measurement, and any other informative variable you think is worth keeping. Do this for 2 weeks. Then make a plot.
-`
+
 ```{r}
 path <- system.file("extdata", package = "dslabs")
 files <- list.files(path)
 files
-a<-file.path(path, "weight.txt")
-read.csv(a)
+x <- c(1:9)
+fullpath <- file.path(path, files[x] )
+file.copy( fullpath, files[x]  , overwrite = T)
+```
+
+```{r}
+url <- 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTHVSozssMwor7QJzAGCM_GWF7veZYmb1eSU3pwzNaj7FDEU83s1aLuxN48aOL_Hgr5IuOe8Nce3F60/pubhtml'
+read.csv(url)
+download.file(url, "weight.exel")
+getwd
+list.files(path = getwd())
+read.csv("weight.txt" )
+```
+
+```{r}
+getwd
 ```
 
 ```
 
 
-why
+
+
+
+
+
 
 
 
