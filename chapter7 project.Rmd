@@ -1,6 +1,8 @@
 ---
 title: "chapter7"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 #Chapter 7 ggplot2
@@ -324,10 +326,8 @@ murders %>% ggplot(aes(population/10^6, total, label = abb)) +
   scale_color_discrete(name = "Region") +
   theme_economist()
 ```
-
 ##7.13 Quick plots with qplot
 We have learned the powerful approach to generating visualization with ggplot. However, there are instances in which all we want is to make a quick plot of, for example, a histogram of the values in a vector, a scatterplot of the values in two vectors, or a boxplot using categorical and numeric vectors. We demonstrated how to generate these plots with hist, plot, and boxplot. However, if we want to keep consistent with the ggplot style, we can use the function qplot.
-
 
 If we have values in two vectors, say:
 ```{r}
