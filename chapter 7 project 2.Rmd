@@ -498,7 +498,7 @@ p <- murders %>%
   geom_label() 
 ```
 
-d
+
 To change the y-axis to a log scale we learned about the scale_x_log10() function. Add this layer to the object p to change the scale and render the plot.
 
 ```{r}
