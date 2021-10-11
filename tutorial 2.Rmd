@@ -1,0 +1,142 @@
+---
+title: "tutorial 2"
+output: html_notebook
+---
+
+1. Introduction
+1.1. What is gene annotation?
+Over the past years, we have learnt that there are a number of chromosomes and genes in our genome. Counting the number of chromosomes is fairly easy but students might find difficult to say how many genes we have in our genome. If you can get an answer for this, could you tell how many genes encode protein and how many do not?
+To answer this question, we need to access the database for gene annotation. Gene annotation is the process of making nucleotide sequence meaningful - where genes are located? whether it is protein-coding or noncoding. If you would like to get an overview of gene annotation, please find this link.
+One of well-known collaborative efforts in gene annotation is the GENCODE consortium. It is a part of the Encyclopedia of DNA Elements (The ENCODE project consortium) and aims to identify all gene features in the human genome using a combination of computational analysis, manual annotation, and experimental validation (Harrow et al. 2012). You might find another database for gene annotation, like RefSeq, CCDS, and need to understand differences between them.
+
+
+
+
+Figure 1. Comparison of GENCODE and RefSeq gene annotation and the impact of reference geneset on variant effect prediction (Frankish et al. 2015). A) Mean number of alternatively spliced transcripts per multi-exon protein-coding locus B) Mean number of unique CDS per multi-exon protein-coding locus C) Mean number of unique (non-redundant) exons per multi-exon protein-coding locus D) Percentage genomic coverage of unique (non-redundant) exons at multi-exon protein-coding loci.
+In this tutorial, we will access to gene annotation from the GENCODE consortium and explore genes and functional elements in our genome.
+1.2. Aims
+What we will do with this dataset:
+Be familiar with gene annotation modality.Tidy data and create a table for your analysis.Apply tidyverse functions for data munging.
+Please note that there is better solution for getting gene annotation in R if you use a biomart. Our tutorial is only designed to have a practice on tidyverse exercise.
+2. Explore your data
+2.1. Unboxing your dataset
+This tutorial will use a gene annotation file from the GENCODE. You will need to download the file from the GENCODE. If you are using terminal, please download file using wget:
+
+```{r}
+# Run from your terminal, not R console
+# wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_31/gencode.v31.basic.annotation.gtf.gz
+
+# Once you downloaded the file, you won't need to download it again. So please comment out the command above by adding #
+```
+Once you download the file, you can print out the first few lines using the following bash command (we will learn UNIX commands later):
+```{r}
+# Run from your terminal, not R console
+# gzcat gencode.v31.basic.annotation.gtf.gz | head -7
+```
+The file is the GFT file format, which you will find most commonly in gene annotation. Please read the file format thoroughly in the link above.
+For the tutorial, we need to load two packages. If the package is not installed in your system, please install it.
+
+tidyverse, a package you have learnt from the chapter 5.readr, a package provides a fast and friendly way to read. Since the file gencode.v31.basic.annotation.gtf.gz is pretty large, you will need some function to load data quickly into your workspace. readr in a part of tidyverse, so you can just load tidyverse to use readr functions. 
+Let's load the GTF file into your workspace. We will use read_delim function from the readr package. This is much faster loading than read.delim or read.csv from R base. However, please keep in mind that some parameters and output class for read_delim are slightly different from them.
+
+
+```{r}
+library(tidyverse)
+ d = read_delim('gencode.v31.chr_patch_hapl_scaff.basic.annotation.gtf', 
+               delim='\t', skip = 5, progress = F, 
+               col_names = F)
+ d
+```
+Can you find out what the parameters mean? Few things to note are:
+The GTF file contains the first few lines for comments (#). In general, the file contains description, provider, date, format. The GTF file does not have column names so you will need to assign `FALSE for col_names.
+This is sort of canonical way to load your dataset into R. However, we are using a GTF format, which is specific to gene annotation so we can use a package to specifically handle a GTF file.
+Here I introduce the package rtracklayer. Let's install the package first.
+```{r}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("rtracklayer")
+```
+Then, now you can read the GTF file using this package. Then, you can check the class of the object d.
+
+```{r}
+d = rtracklayer::import('gencode.v31.basic.annotation.gtf.gz')
+class(d)
+```
+
+You will find out that this is GRanges class. This is from the package Genomic Range, specifically dealing with genomic datasets but we are not heading into this in this tutorial. So please find this information if you are serious on this. 
+We are converting d into a data frame as following:
+```{r}
+library(tidyverse)
+library(dslabs)
+d = d %>% as.data.frame()
+```
+Let's overview few lines from the  data frame, and explore what you get in this object.
+```{r}
+head(d)
+```
+
+One thing you can find is that there is no columns in the data frame. Let's match which information is provided in columns. You can find the instruction page in the website (link).
+Based on this, you can assign a name for 9 columns. One thing to remember is you should not use space for the column name. Spacing in the column name is actually working but not a good habit for your code. So please replace a space with underscore in the column name.
+```{r}
+# Assign column names according to the GENCODE instruction.
+cols = c('chrom', 'source', 'feature_type', 'start', 'end', 'score', 'strand', 'phase', 'info')
+```
+
+Now you can set up the column names into the col_names parameter, and load the file into a data frame.
+
+
+
+```{r}
+d = read_delim('gencode.v31.chr_patch_hapl_scaff.basic.annotation.gtf', 
+               delim='\t', skip = 5, 
+               progress = F,
+               col_names = cols)
+```
+
+You can find the column names are now all set.
+```{r}
+head(d)
+```
+
+When you loaded the file, you see the message about the data class. You might want to overview this data.
+```{r}
+summary(d)
+```
+2.2. How many feature types in the GENCODE dataset?
+As instructed in the GENCODE website, the GENCODE dataset provides a range of annotations for the feature type. You can check feature types using ____ function.
+
+```{r}
+d%>% group_by(feature_type) %>% count()
+# table (d$feature_type)
+
+```
+
+How many feature types provided in the GENCODE? And how many items stored for each feature type? Please write down the number of feature types from the dataset. Also, if you are not familiar with these types, it would be good to put one or two sentences that can describe each type).
+
+2.3. How many genes we have?
+Let's count the number of genes in our genome. Since we know that the column feature_type contains rows with gene, which contains obviously annotations for genes. We might want to subset those rows from the data frame.
+```{r}
+d1 = d %>% filter(feature_type == 'gene')
+```
+
+2.4. Ensembl, Havana and CCDS.
+Gene annotation for the human genome is provided by multiple organizations with different gene annotation methods and strategy. This means that information can be varying by resources, and users need to understand heterogeniety inherent in annotation databases.
+The GENCODE project utlizes two sources of gene annotation.
+Havana: Manual gene annotation (detailed strategy in here)Ensembl: Automatic gene annotation (detailed strategy in here)
+It provides the combination of Ensembl/HAVANA gene set as the default gene annotation for the human genome. In addition, they also guarantee that all transcripts from the Consensus Coding Sequence (CCDS) set are present in the GENCODE gene set. The CCDS project is a collaborative effort to identify a core set of protein coding regions that are consistently annotated and of high quality. Initial results from the Consensus CDS (CCDS) project are now available through the appropriate Ensembl gene pages and from the CCDS project page at NCBI. The CCDS set is built by consensus among Ensembl, the National Center for Biotechnology Information (NCBI), and the HUGO Gene Nomenclature Committee (HGNC) for human (link).
+Figure 2. Comparison of CCDS and Gencode (Source).
+Right. Then now we count how many genes annotated with HAVANA and ENSEMBL.
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
