@@ -56,15 +56,12 @@ The GTF file contains the first few lines for comments (#). In general, the file
 This is sort of canonical way to load your dataset into R. However, we are using a GTF format, which is specific to gene annotation so we can use a package to specifically handle a GTF file.
 Here I introduce the package rtracklayer. Let's install the package first.
 ```{r}
-if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
 
-BiocManager::install("rtracklayer")
 ```
 Then, now you can read the GTF file using this package. Then, you can check the class of the object d.
 
 ```{r}
-d = rtracklayer::import('gencode.v31.basic.annotation.gtf.gz')class(d)
+
 ```
 
 You will find out that this is GRanges class. This is from the package Genomic Range, specifically dealing with genomic datasets but we are not heading into this in this tutorial. So please find this information if you are serious on this. 
@@ -260,11 +257,22 @@ d %>% group_by(chrom) %>% count()
 3.2. Gene length in the GENCODE
 1. What is the average length of human genes?
 
+```{r}
+ d %>% mutate(width = end - start)
+mean(d$width)
+```
 
 2. Is the distribution of gene length differed by autosomal and sex chromosomes? Please calculate the quantiles (0%, 25%, 50%, 75%, 100%) of the gene length for each group.
+```{r}
+quantile(d$width, c(0, 0.25, 0.5, 0.75, 1))
+```
+
 
 3. Is the distribution of gene length differed by gene biotype? Please calculate the quantiles (0%, 25%, 50%, 75%, 100%) of the gene length for each group.
 
+```{r}
+d %>% group_by(d$gene_type, d$width) %>% count()
+```
 
 
 3.3. Transcript support levels (TSL)
@@ -272,6 +280,8 @@ The GENCODE TSL provides a consistent method of evaluating the level of support 
 
 
 With transcript, how many transcripts are categorized for each TSL?
+
+
 From the first question, please count the number of transcript for each TSL by gene biotype.
 From the first question, please count the number of transcript for each TSL by source.
 
@@ -292,7 +302,9 @@ Please count the number of transcripts by chromosomes.
 
 3.6. Autosomal vs. Sex chromosomes.
 Please calculate the number of genes per chromosome.
+
 Please compare the number of genes between autosomal and sex chromosome (Mean, Median).
+
 Please divide the genes into groups ‘protein coding’ and ‘long noncoding’, and then compare the number of genes in each chromosomes within groups.
 
 
