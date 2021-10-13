@@ -234,7 +234,7 @@ Gene biotype. 0 or 1 based annotation in GTF, BED formatWhy some features have 1
 a<-d %>% group_by(gene_id) %>% count()
 mean(a$n)
 
-a$n %>% quantile(0.25, 0.5, 0.75)
+a$n %>% quantile(c(0.25, 0.5, 0.75))
 
 d %>% group_by(gene_id) %>% count() %>% arrange(desc(n)) %>% .[1,]
 ```
