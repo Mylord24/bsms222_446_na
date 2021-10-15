@@ -551,7 +551,7 @@ Now reproduce the time series plot we previously made, but this time following t
 For the state of California, make a time series plot showing rates for all diseases. Include only years with 10 or more weeks reporting. Use a different color for each disease.
 
 Now do the same for the rates for the US. Hint: compute the US rate by using summarize: the total divided by total population.
-
+fff
 
 
 
