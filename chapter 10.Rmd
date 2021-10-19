@@ -13,10 +13,7 @@ The principles are mostly based on research related to how humans detect pattern
 We will be using these libraries:
 
 ```{r}
-install.packages("tidyverse")
-install.packages("dslabs")
-install.packages("gridExtra")
-install.packages("ggplot2")
+
 library(tidyverse)
 library(dslabs)
 library(gridExtra)
@@ -364,51 +361,83 @@ As a simple example, consider that for your own exploration it may be more usefu
 
 For these exercises, we will be using the vaccines data in the dslabs package:
 
+
+1. Pie charts are appropriate:
+```{r}
 library(dslabs)
 data(us_contagious_diseases)
-1. Pie charts are appropriate:
 
-When we want to display percentages.
-When ggplot2 is not available.
-When I am in a bakery.
-Never. Barplots and tables are always better.
+```
+
+1 When we want to display percentages.
+2 When ggplot2 is not available.
+3 When I am in a bakery.
+4 Never. Barplots and tables are always better.
+
+#1
 2. What is the problem with the plot below:
 
 
 
-The values are wrong. The final vote was 306 to 232.
-The axis does not start at 0. Judging by the length, it appears Trump received 3 times as many votes when, in fact, it was about 30% more.
-The colors should be the same.
-Percentages should be shown as a pie chart.
+1 The values are wrong. The final vote was 306 to 232.
+2 The axis does not start at 0. Judging by the length, it appears Trump received 3 times as many votes when, in fact, it was about 30% more.
+3 The colors should be the same.
+4 Percentages should be shown as a pie chart.
+#2
+
 3. Take a look at the following two plots. They show the same information: 1928 rates of measles across the 50 states.
 
 Which plot is easier to read if you are interested in determining which are the best and worst states in terms of rates, and why?
 
-They provide the same information, so they are both equally as good.
-The plot on the right is better because it orders the states alphabetically.
-The plot on the right is better because alphabetical order has nothing to do with the disease and by ordering according to actual rate, we quickly see the states with most and least rates.
-Both plots should be a pie chart.
+1 They provide the same information, so they are both equally as good.
+2 The plot on the right is better because it orders the states alphabetically.
+3 The plot on the right is better because alphabetical order has nothing to do with the disease and by ordering according to actual rate, we quickly see the states with most and least rates.
+4 Both plots should be a pie chart.
+#3
+
 4. To make the plot on the left, we have to reorder the levels of the states’ variables.
 ```{r}
 dat <- us_contagious_diseases %>%  
   filter(year == 1967 & disease=="Measles" & !is.na(population)) %>%
   mutate(rate = count / population * 10000 * 52 / weeks_reporting)
+
 ```
+
 Note what happens when we make a barplot:
+
 ```{r}
 dat %>% ggplot(aes(state, rate)) +
   geom_bar(stat="identity") +
-  coord_flip()
+coord_flip()
 ```
 Define these objects:
 ```{r}
 state <- dat$state
 rate <- dat$count/dat$population*10000*52/dat$weeks_reporting
+
 ```
 
 Redefine the state object so that the levels are re-ordered. Print the new object state and its levels so you can see that the vector is not re-ordered by the levels.
 
+```{r}
+state <- dat$state %>% reorder(dat$rate)
+
+dat %>% ggplot(aes(state, rate)) +
+  geom_bar(stat="identity") +
+coord_flip()
+
+```
+
+
 5. Now with one line of code, define the dat table as done above, but change the use mutate to create a rate variable and re-order the state variable so that the levels are re-ordered by this variable. Then make a barplot using the code above, but for this new dat.
+
+```{r}
+dat$state <- dat$state %>% reorder(dat$rate)
+dat %>% ggplot(aes(state, rate)) +
+  geom_bar(stat="identity") +
+coord_flip()
+```
+
 
 6. Say we are interested in comparing gun homicide rates across regions of the US. We see this plot:
 
@@ -426,36 +455,43 @@ ylab("Murder Rate Average")
 
 and decide to move to a state in the western region. What is the main problem with this interpretation?
 
-The categories are ordered alphabetically.
-The graph does not show standarad errors.
-It does not show all the data. We do not see the variability within a region and it’s possible that the safest states are not in the West.
-The Northeast has the lowest average.
+1 The categories are ordered alphabetically.
+2 The graph does not show standarad errors.
+3 It does not show all the data. We do not see the variability within a region and it’s possible that the safest states are not in the West.
+4 The Northeast has the lowest average.
+#3
+
 7. Make a boxplot of the murder rates defined as
 ```{r}
 data("murders")
 murders %>% mutate(rate = total/population*100000)
+
 ```
 by region, showing all the points and ordering the regions by their median rate.
 
+```{r}
+murders %>%  ggplot(aes(reorder(region, rate, median), rate)) + 
+  geom_boxplot() +
+   geom_jitter(width = 0.1)
+```
+
+
 8. The plots below show three continuous variables.
 
-
-
-The line  
-x
-=
-2
+The line  x=2
   appears to separate the points. But it is actually not the case, which we can see by plotting the data in a couple of two-dimensional points.
-
-
 
 Why is this happening?
 
-Humans are not good at reading pseudo-3D plots.
-There must be an error in the code.
-The colors confuse us.
-Scatterplots should not be used to compare two variables when we have access to 3.
-10.14 Case study: vaccines and infectious diseases
+
+1 Humans are not good at reading pseudo-3D plots.
+2 There must be an error in the code.
+3 The colors confuse us.
+4 Scatterplots should not be used to compare two variables when we have access to 3.
+#1
+
+
+##10.14 Case study: vaccines and infectious diseases
 
 Vaccines have helped save millions of lives. In the 19th century, before herd immunization was achieved through vaccination programs, deaths from infectious diseases, such as smallpox and polio, were common. However, today vaccination programs have become somewhat controversial despite all the scientific evidence for their importance.
 
@@ -468,7 +504,7 @@ The data used for these plots were collected, organized, and distributed by the 
 ```{r}
 library(tidyverse)
 library(RColorBrewer)
-library(dslabs)
+library(dslabs)  
 data(us_contagious_diseases)
 names(us_contagious_diseases)
 
@@ -477,11 +513,13 @@ names(us_contagious_diseases)
 We create a temporary object dat that stores only the measles data, includes a per 100,000 rate, orders states by average value of disease and removes Alaska and Hawaii since they only became states in the late 1950s. Note that there is a weeks_reporting column that tells us for how many weeks of the year data was reported. We have to adjust for that value when computing the rate.
 
 ```{r}
+
 the_disease <- "Measles"
 dat <- us_contagious_diseases %>%
   filter(!state%in%c("Hawaii","Alaska") & disease == the_disease) %>%
   mutate(rate = count / population * 10000 * 52 / weeks_reporting) %>% 
   mutate(state = reorder(state, rate)) 
+
 ```
 
 We can now easily plot disease rates per year. Here are the measles data from California:
@@ -492,6 +530,7 @@ dat %>% filter(state == "California" & !is.na(rate)) %>%
   geom_line() + 
   ylab("Cases per 10,000")  + 
    geom_vline(xintercept=1963, col = "blue")
+
 ```
 
 We add a vertical line at 1963 since this is when the vaccine was introduced [Control, Centers for Disease; Prevention (2014). CDC health information for international travel 2014 (the yellow book). p. 250. ISBN 9780199948505].
@@ -546,15 +585,83 @@ In theory, we could use color to represent the categorical value state, but it i
 
 Reproduce the image plot we previously made but for smallpox. For this plot, do not include years in which cases were not reported in 10 or more weeks.
 
+```{r}
+the_disease <- "Smallpox"
+dat <- us_contagious_diseases %>%
+  filter(!state%in%c("Hawaii","Alaska") & disease == the_disease & !weeks_reporting < 10) %>%
+  mutate(rate = count / population * 10000 * 52 / weeks_reporting) %>% 
+  mutate(state = reorder(state, rate)) 
+
+avg <- us_contagious_diseases %>%
+  filter(disease==the_disease) %>% group_by(year) %>%
+  summarize(us_rate = sum(count, na.rm = TRUE) / 
+              sum(population, na.rm = TRUE) * 10000)
+avg
+dat %>% 
+  filter(!is.na(rate)) %>%
+    ggplot() +
+  geom_line(aes(year, rate, group = state),  color = "grey50", 
+            show.legend = FALSE, alpha = 0.2, size = 1) +
+  geom_line(mapping = aes(year, us_rate),  data = avg, size = 1)  + 
+  ggtitle("Cases per 10,000 by state") + 
+  xlab("") + ylab("") +
+  geom_text(data = data.frame(x = 1938, y = 2), 
+            mapping = aes(x, y, label="US average"), 
+            color="black") + 
+  geom_vline(xintercept=1940, col = "blue")
+
+
+```
+
+
+```{r}
+library(dslabs)
+us_contagious_diseases %>% filter(disease == "Smallpox" & state == "California")
+```
+
+
 Now reproduce the time series plot we previously made, but this time following the instructions of the previous question for smallpox.
+```{r}
+dat %>% ggplot(aes(year, state, fill = rate)) +
+  geom_tile(color = "grey50") +
+  scale_x_continuous(expand=c(0,0)) +
+  scale_fill_gradientn(colors = brewer.pal(9, "Reds"), trans = "sqrt") +
+  geom_vline(xintercept=1938, col = "blue") +
+  theme_minimal() +  
+  theme(panel.grid = element_blank(), 
+        legend.position="bottom", 
+        text = element_text(size = 8)) +
+  ggtitle(the_disease) + 
+ylab("") + xlab("") +
+  coord_fixed(ratio = 0.5)
+```
+
+
 
 For the state of California, make a time series plot showing rates for all diseases. Include only years with 10 or more weeks reporting. Use a different color for each disease.
 
+```{r}
+dat %>% filter(state == "California" & !is.na(rate) & !weeks_reporting <10) %>%
+  ggplot(aes(year, rate)) +
+  geom_line() + 
+  ylab("Cases per 10,000")  + 
+  geom_vline(xintercept=1938, col = "blue")
+```
+
+
+
 Now do the same for the rates for the US. Hint: compute the US rate by using summarize: the total divided by total population.
-fff
+
+```{r}
+avg %>% 
+  ggplot(aes(year, us_rate)) +
+  geom_line() + 
+  ylab("Cases per 10,000")  + 
+  geom_vline(xintercept=1938, col = "blue")
 
 
 
+```
 
 
 
